@@ -43,3 +43,7 @@ composer-require-checker:
 
 composer-unused:
 	$(DOCKER_RUN) composer unused --ansi
+
+build-frontend:
+	yarn install
+	npm run build

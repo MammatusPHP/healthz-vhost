@@ -3,7 +3,9 @@
     "null", "true", "false",
     "static", "self", "parent",
     "array", "string", "int", "float", "bool", "iterable", "callable", "void", "object",
-    "WyriHaximus\\Constants\\Boolean\\FALSE_", "WyriHaximus\\Constants\\Boolean\\TRUE_"
+    "WyriHaximus\\Constants\\Boolean\\FALSE_", "WyriHaximus\\Constants\\Boolean\\TRUE_",
+    "WyriHaximus\\Constants\\HTTPStatusCodes\\OK", "WyriHaximus\\Constants\\Numeric\\TWO",
+    "WyriHaximus\\Constants\\HTTPStatusCodes\\PERMANENT_REDIRECT"
   ],
   "php-core-extensions" : [
     "Core",
