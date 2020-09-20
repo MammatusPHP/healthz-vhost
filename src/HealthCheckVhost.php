@@ -10,7 +10,7 @@ use Mammatus\Http\Server\Webroot\WebrootPath;
 
 use function dirname;
 
-use const WyriHaximus\Constants\Numeric\TWO;
+use const WyriHaximus\Constants\Numeric\ONE;
 
 final class HealthCheckVhost implements Vhost
 {
@@ -29,6 +29,6 @@ final class HealthCheckVhost implements Vhost
 
     public function webroot(): Webroot
     {
-        return new WebrootPath(dirname(__DIR__, TWO) . '/webroot/');
+        return new WebrootPath(dirname(__DIR__, ONE) . '/webroot/');
     }
 }
