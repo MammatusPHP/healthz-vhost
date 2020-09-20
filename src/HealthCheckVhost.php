@@ -29,6 +29,6 @@ final class HealthCheckVhost implements Vhost
 
     public function webroot(): Webroot
     {
-        return new WebrootPath(dirname(__DIR__, TWO) . '/etc/vhosts/healthz/webroot/');
+        return new WebrootPath(dirname(__DIR__, TWO) . '/webroot/');
     }
 }
