@@ -31,4 +31,9 @@ final class HealthCheckVhost implements Vhost
     {
         return new WebrootPath(dirname(__DIR__, ONE) . '/webroot/');
     }
+
+    public function middleware(): iterable
+    {
+        yield from [];
+    }
 }
