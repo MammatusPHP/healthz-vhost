@@ -11,7 +11,7 @@
         "mammatus/http-server-webroot": "dev-master",
         "mammatus/http-server-websockets": "dev-master",
         "psr/http-message": "^1.0",
-        "psr/log": "^1.1",
+        "psr/log": "^3 || ^2 || ^1.1",
         "react/event-loop": "^1.1",
         "react/http": "^1.1",
         "thecodingmachine/safe": "^1.2",
