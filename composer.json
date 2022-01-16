@@ -3,7 +3,7 @@
     "description": "⚕️ Basic health check vhost",
     "license": "MIT",
     "require": {
-        "php": "^7.4",
+        "php": "^8.1",
         "chimera/foundation": "^0.3.0",
         "mammatus/http-server-annotations": "dev-master",
         "mammatus/http-server-contracts": "dev-master",
@@ -18,11 +18,28 @@
     },
     "require-dev": {
         "mammatus/test-utilities": "dev-master",
-        "wyrihaximus/ticking-promise": "^1.6"
+        "wyrihaximus/ticking-promise": "^3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mammatus\\Vhost\\Healthz\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Mammatus\\Tests\\Vhost\\Healthz\\": "tests/"
+        }
     },
     "config": {
+        "allow-plugins": {
+            "ergebnis/composer-normalize": true,
+            "composer/package-versions-deprecated": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "icanhazstring/composer-unused": true,
+            "infection/extension-installer": true
+        },
         "platform": {
-            "php": "7.4.7"
+            "php": "8.1"
         },
         "sort-packages": true
     },
@@ -33,16 +50,6 @@
                     "has-vhosts": true
                 }
             }
-        }
-    },
-    "autoload": {
-        "psr-4": {
-            "Mammatus\\Vhost\\Healthz\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Mammatus\\Tests\\Vhost\\Healthz\\": "tests/"
         }
     },
     "scripts": {
