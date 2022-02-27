@@ -42,12 +42,10 @@ final class HealthzBroadcastTest extends AsyncTestCase
 
         $client->getPublisher()->shouldBeCalled()->willReturn($publisher->reveal());
 
-        $loop = Factory::create();
-
-        $healthBroadcast = new HealthBroadcast($loop);
+        $healthBroadcast = new HealthBroadcast();
 
         $healthBroadcast->broadcast(new Broadcaster($clientSession));
 
-        $this->await(timedPromise($loop, 15), $loop, 20);
+        $this->await(timedPromise(15), 20);
     }
 }
