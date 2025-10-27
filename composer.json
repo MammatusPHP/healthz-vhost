@@ -1,64 +1,66 @@
 {
-    "name": "mammatus/healthz-vhost",
-    "description": "⚕️ Basic health check vhost",
-    "license": "MIT",
-    "require": {
-        "php": "^8.1",
-        "chimera/foundation": "^0.4.0",
-        "chimera/mapping": "^0.4.0",
-        "mammatus/http-server-annotations": "dev-master",
-        "mammatus/http-server-contracts": "dev-master",
-        "mammatus/http-server-webroot": "dev-master",
-        "mammatus/http-server-websockets": "dev-master",
-        "psr/http-message": "^1.0",
-        "psr/log": "^3 || ^2 || ^1.1",
-        "react/event-loop": "^1.1",
-        "react/http": "^1.1",
-        "thecodingmachine/safe": "^2 || ^1.2",
-        "wyrihaximus/constants": "^1.5"
-    },
-    "require-dev": {
-        "mammatus/test-utilities": "dev-master",
-        "wyrihaximus/ticking-promise": "^3"
-    },
-    "autoload": {
-        "psr-4": {
-            "Mammatus\\Vhost\\Healthz\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Mammatus\\Tests\\Vhost\\Healthz\\": "tests/"
-        }
-    },
-    "config": {
-        "allow-plugins": {
-            "ergebnis/composer-normalize": true,
-            "composer/package-versions-deprecated": true,
-            "dealerdirect/phpcodesniffer-composer-installer": true,
-            "icanhazstring/composer-unused": true,
-            "infection/extension-installer": true
-        },
-        "platform": {
-            "php": "8.1"
-        },
-        "sort-packages": true
-    },
-    "extra": {
-        "mammatus": {
-            "http": {
-                "server": {
-                    "has-vhosts": true
-                }
-            }
-        }
-    },
-    "scripts": {
-        "post-install-cmd": [
-            "composer normalize"
-        ],
-        "post-update-cmd": [
-            "composer normalize"
-        ]
+  "name": "mammatus/healthz-vhost",
+  "description": "\u2695\ufe0f Basic health check vhost",
+  "license": "MIT",
+  "require": {
+    "php": "^8.4",
+    "mammatus/groups": "^0.1.1",
+    "mammatus/http-server-attributes": "dev-main",
+    "mammatus/http-server-contracts": "dev-master",
+    "mammatus/http-server-webroot": "dev-master",
+    "mammatus/life-cycle-events": "^2.3.0",
+    "psr/http-message": "^1.1.0",
+    "react/event-loop": "^1.3.0",
+    "react/http": "^1.8.0"
+  },
+  "require-dev": {
+    "wyrihaximus/makefiles": "^0.7.12",
+    "wyrihaximus/test-utilities": "^8.7.0",
+    "wyrihaximus/ticking-promise": "^3.1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Mammatus\\Vhost\\Healthz\\": "src/"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Mammatus\\Tests\\Vhost\\Healthz\\": "tests/"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/package-versions-deprecated": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "ergebnis/composer-normalize": true,
+      "icanhazstring/composer-unused": true,
+      "infection/extension-installer": true,
+      "mammatus/groups": true,
+      "phpstan/extension-installer": true,
+      "wyrihaximus/makefiles": true,
+      "wyrihaximus/test-utilities": true
+    },
+    "platform": {
+      "php": "8.4.13"
+    },
+    "sort-packages": true
+  },
+  "extra": {
+    "mammatus": {
+      "has-groups": true,
+      "http": {
+        "server": {
+          "has-vhosts": true
+        }
+      }
+    }
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "make on-install-or-update || true"
+    ],
+    "post-update-cmd": [
+      "make on-install-or-update || true"
+    ]
+  }
 }

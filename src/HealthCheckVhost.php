@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace Mammatus\Vhost\Healthz;
 
+use Mammatus\Groups\Attributes\Group;
+use Mammatus\Groups\Type;
 use Mammatus\Http\Server\Configuration\Vhost;
-use Mammatus\Http\Server\Configuration\Webroot;
-use Mammatus\Http\Server\Webroot\WebrootPath;
+use Mammatus\Http\Server\Webroot\NoWebroot;
+use Psr\Http\Server\MiddlewareInterface;
 
-use function dirname;
-
-use const WyriHaximus\Constants\Numeric\ONE;
-
+#[Group(Type::Daemon, 'healthz')]
 final class HealthCheckVhost implements Vhost
 {
-    private const SERVER_NAME = 'healthz';
-    private const LISTEN_PORT = 9666;
+    private const string SERVER_NAME = 'healthz';
+    private const int LISTEN_PORT    = 9666;
 
     public static function port(): int
     {
@@ -27,16 +26,17 @@ final class HealthCheckVhost implements Vhost
         return self::SERVER_NAME;
     }
 
-    public static function webroot(): Webroot
+    public static function webroot(): NoWebroot
     {
-        return new WebrootPath(dirname(__DIR__, ONE) . '/webroot/');
+        return new NoWebroot();
     }
 
-    public static function maxConcurrentRequests(): ?int
+    public static function maxConcurrentRequests(): int|null
     {
         return null;
     }
 
+    /** @return iterable<MiddlewareInterface> */
     public function middleware(): iterable
     {
         yield from [];
