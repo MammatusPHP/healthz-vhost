@@ -3,3 +3,5 @@ vendor
 .env
 /src/Generated/
 /etc/vhosts/healthz/node_modules
+var/*
+!var/.gitkeep
