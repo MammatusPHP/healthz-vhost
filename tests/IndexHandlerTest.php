@@ -16,9 +16,8 @@ final class IndexHandlerTest extends TestCase
     {
         $response = IndexHandler::handle();
 
-        self::assertSame(Response::STATUS_OK, $response->getStatusCode());
-        // We'll add this back later
-//        self::assertSame(['/index.html'], $response->getHeader('Location'));
-        self::assertSame('We good!', $response->getBody()->getContents());
+        self::assertSame(Response::STATUS_TEMPORARY_REDIRECT, $response->getStatusCode());
+        self::assertSame(['/index.html'], $response->getHeader('Location'));
+        self::assertSame('#niethier', $response->getBody()->getContents());
     }
 }

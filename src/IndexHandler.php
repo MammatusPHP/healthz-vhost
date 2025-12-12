@@ -16,6 +16,6 @@ final class IndexHandler
 {
     public static function handle(): ResponseInterface
     {
-        return new Response(Response::STATUS_OK, ['Content-Type' => 'text/plain'], 'We good!');
+        return new Response(Response::STATUS_TEMPORARY_REDIRECT, ['Content-Type' => 'text/plain', 'Location' => '/index.html'], '#niethier');
     }
 }
