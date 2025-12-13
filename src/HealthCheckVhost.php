@@ -7,8 +7,12 @@ namespace Mammatus\Vhost\Healthz;
 use Mammatus\Groups\Attributes\Group;
 use Mammatus\Groups\Type;
 use Mammatus\Http\Server\Configuration\Vhost;
-use Mammatus\Http\Server\Webroot\NoWebroot;
+use Mammatus\Http\Server\Webroot\WebrootPath;
 use Psr\Http\Server\MiddlewareInterface;
+
+use function dirname;
+
+use const DIRECTORY_SEPARATOR;
 
 #[Group(Type::Daemon, 'healthz')]
 final class HealthCheckVhost implements Vhost
@@ -26,9 +30,9 @@ final class HealthCheckVhost implements Vhost
         return self::SERVER_NAME;
     }
 
-    public static function webroot(): NoWebroot
+    public static function webroot(): WebrootPath
     {
-        return new NoWebroot();
+        return new WebrootPath(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'public');
     }
 
     public static function maxConcurrentRequests(): int|null
