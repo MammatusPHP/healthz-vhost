@@ -14,7 +14,7 @@
     "react/http": "^1.8.0"
   },
   "require-dev": {
-    "wyrihaximus/makefiles": "^0.7.14",
+    "wyrihaximus/makefiles": "^0.7.15",
     "wyrihaximus/test-utilities": "^8.8.0",
     "wyrihaximus/ticking-promise": "^3.1.0"
   },
