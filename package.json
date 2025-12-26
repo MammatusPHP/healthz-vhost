@@ -4,7 +4,7 @@
   },
   "dependencies": {
     "path": "^0.12.7",
-    "rxjs": "^6.6.2",
+    "rxjs": "^6.6.2 || ^7.0.0",
     "rxjs-compat": "^6.6.2",
     "thruway.js": "^2.0.7",
     "webpack": "^4.44.1",
