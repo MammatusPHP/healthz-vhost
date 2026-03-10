@@ -9,7 +9,7 @@
     "mammatus/http-server-contracts": "dev-master",
     "mammatus/http-server-webroot": "dev-master",
     "mammatus/life-cycle-events": "^2.3.0",
-    "psr/http-message": "^1.1.0",
+    "psr/http-message": "^1.1.0 || ^2.0.0",
     "react/event-loop": "^1.3.0",
     "react/http": "^1.8.0"
   },
