@@ -14,8 +14,10 @@
     "react/http": "^1.8.0"
   },
   "require-dev": {
-    "wyrihaximus/makefiles": "^0.7.16",
-    "wyrihaximus/test-utilities": "^8.8.0",
+    "mammatus/app": "dev-master",
+    "mammatus/http-server": "dev-master",
+    "wyrihaximus/makefiles": "^0.13.2",
+    "wyrihaximus/test-utilities": "^13.4.0",
     "wyrihaximus/ticking-promise": "^3.1.0"
   },
   "autoload": {
@@ -37,6 +39,7 @@
       "infection/extension-installer": true,
       "mammatus/groups": true,
       "phpstan/extension-installer": true,
+      "wyrihaximus/generative-composer-plugin-tooling": true,
       "wyrihaximus/makefiles": true,
       "wyrihaximus/test-utilities": true
     },
