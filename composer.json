@@ -16,7 +16,7 @@
   "require-dev": {
     "mammatus/app": "dev-master",
     "mammatus/http-server": "dev-master",
-    "wyrihaximus/makefiles": "^0.13.2",
+    "wyrihaximus/makefiles": "^0.14.7",
     "wyrihaximus/test-utilities": "^14.1.0",
     "wyrihaximus/ticking-promise": "^3.1.0"
   },
