@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5332fc91c59357eaa42641d009511228",
+    "content-hash": "56d6d64026492e1677f68b9b7f349561",
     "packages": [
         {
             "name": "evenement/evenement",
@@ -316,20 +316,20 @@
         },
         {
             "name": "mammatus/http-server-webroot",
-            "version": "0.1.0",
+            "version": "0.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MammatusPHP/http-server-webroot.git",
-                "reference": "66fb33d86d65820f3749168af868f5525ec12abb"
+                "reference": "0151a1b2c2a3e9db4dbb5aaeb6517c7139027bbe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MammatusPHP/http-server-webroot/zipball/66fb33d86d65820f3749168af868f5525ec12abb",
-                "reference": "66fb33d86d65820f3749168af868f5525ec12abb",
+                "url": "https://api.github.com/repos/MammatusPHP/http-server-webroot/zipball/0151a1b2c2a3e9db4dbb5aaeb6517c7139027bbe",
+                "reference": "0151a1b2c2a3e9db4dbb5aaeb6517c7139027bbe",
                 "shasum": ""
             },
             "require": {
-                "mammatus/http-server-contracts": "dev-master",
+                "mammatus/http-server-contracts": "^0.1.0",
                 "php": "^8.4"
             },
             "require-dev": {
@@ -349,9 +349,9 @@
             "description": "HTTP Server webroot implementations",
             "support": {
                 "issues": "https://github.com/MammatusPHP/http-server-webroot/issues",
-                "source": "https://github.com/MammatusPHP/http-server-webroot/tree/0.1.0"
+                "source": "https://github.com/MammatusPHP/http-server-webroot/tree/0.1.2"
             },
-            "time": "2026-09-27T12:41:01+00:00"
+            "time": "2026-09-27T13:00:02+00:00"
         },
         {
             "name": "mammatus/life-cycle-events",
@@ -13363,7 +13363,7 @@
         },
         {
             "package": "mammatus/http-server-webroot",
-            "version": "0.1.0.0",
+            "version": "0.1.2.0",
             "alias": "dev-master",
             "alias_normalized": "dev-master"
         }
