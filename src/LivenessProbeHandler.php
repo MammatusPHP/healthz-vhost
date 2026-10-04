@@ -12,6 +12,7 @@ use Mammatus\Http\Server\Attributes\Vhost;
 use Psr\Http\Message\ResponseInterface;
 use React\Http\Message\Response;
 
+/** @api */
 #[Vhost('healthz')]
 #[Route(HttpMethod::GET, '/probe/liveness')]
 #[Probe(ProbeType::Liveness)]

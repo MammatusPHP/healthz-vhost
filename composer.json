@@ -5,7 +5,7 @@
   "require": {
     "php": "^8.4",
     "mammatus/groups": "^0.1.1 || ^0.2.0 || ^0.3.0 || ^0.4.0",
-    "mammatus/http-server-attributes": "^0.1.0",
+    "mammatus/http-server-attributes": "^0.1.0 || ^0.2.0 || ^0.3.0",
     "mammatus/http-server-contracts": "^0.1.0",
     "mammatus/http-server-webroot": "^0.1.2",
     "mammatus/life-cycle-events": "^2.3.0",
@@ -15,7 +15,6 @@
   },
   "require-dev": {
     "mammatus/app": "dev-master",
-    "mammatus/http-server": "dev-master",
     "wyrihaximus/makefiles": "^0.15.1",
     "wyrihaximus/test-utilities": "^14.4.0",
     "wyrihaximus/ticking-promise": "^3.1.0"
@@ -41,7 +40,6 @@
       "infection/extension-installer": true,
       "mammatus/app": true,
       "mammatus/groups": true,
-      "mammatus/http-server": true,
       "phpstan/extension-installer": true,
       "wyrihaximus/broadcast": true,
       "wyrihaximus/generative-composer-plugin-tooling": true,
