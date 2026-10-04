@@ -1,223 +1,77 @@
-```bash
-time docker run --rm -w `pwd` -v `pwd`:`pwd` -p 9666:9666  -it wyrihaximusnet/php:7.4-zts-alpine3.11 php ./vendor/bin/mammatus
-```
+# Basic health check vhost
 
+![Continuous Integration](https://github.com/MammatusPHP/healthz-vhost/workflows/Continuous%20Integration/badge.svg)
+[![Latest Stable Version](https://poser.pugx.org/mammatus/healthz-vhost/v/stable.png)](https://packagist.org/packages/mammatus/healthz-vhost)
+[![Total Downloads](https://poser.pugx.org/mammatus/healthz-vhost/downloads.png)](https://packagist.org/packages/mammatus/healthz-vhost/stats)
+[![Type Coverage](https://shepherd.dev/github/MammatusPHP/healthz-vhost/coverage.svg)](https://shepherd.dev/github/MammatusPHP/healthz-vhost)
+[![License](https://poser.pugx.org/mammatus/healthz-vhost/license.png)](https://packagist.org/packages/mammatus/healthz-vhost)
 
-# HTTP Server command
+Ready-made [`Vhost`](https://github.com/MammatusPHP/http-server-contracts/blob/master/src/Configuration/Vhost.php) configuration, HTTP handlers, and Kubernetes-style probes for a dedicated **healthz** virtual host. Install it in a [MammatusPHP](https://github.com/MammatusPHP/app) application that uses [mammatus/http-server](https://github.com/MammatusPHP/http-server); the server Composer plugin discovers this package (via `extra.mammatus.http.server.has-vhosts`) and wires routes, Helm probe paths, and static file serving from [`public/`](public/).
 
-[![Build Status](https://travis-ci.com/reactive-apps/command-http-server.svg?branch=master)](https://travis-ci.com/reactive-apps/command-http-server)
-[![Latest Stable Version](https://poser.pugx.org/reactive-apps/command-http-server/v/stable.png)](https://packagist.org/packages/reactive-apps/command-http-server)
-[![Total Downloads](https://poser.pugx.org/reactive-apps/command-http-server/downloads.png)](https://packagist.org/packages/reactive-apps/command-http-server/stats)
-[![Code Coverage](https://scrutinizer-ci.com/g/reactive-apps/command-http-server/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/reactive-apps/command-http-server/?branch=master)
-[![License](https://poser.pugx.org/reactive-apps/command-http-server/license.png)](https://packagist.org/packages/reactive-apps/command-http-server)
-[![PHP 7 ready](http://php7ready.timesplinter.ch/reactive-apps/command-http-server/badge.svg)](https://travis-ci.com/reactive-apps/command-http-server)
+The vhost listens on port **9666** and registers the Mammatus group **`healthz`** ([`Type::Daemon`](https://github.com/MammatusPHP/groups/blob/main/src/Type.php)).
 
 # Install
 
-To install via [Composer](http://getcomposer.org/), use the command below, it will automatically detect the latest version and bind it with `^`.
+To install via [Composer](https://getcomposer.org/), use the command below. Composer picks the latest compatible version and applies a `^` constraint.
 
 ```
-composer require reactive-apps/command-http-server
+composer require mammatus/healthz-vhost
 ```
 
-# Controllers
+Your application also needs [mammatus/http-server](https://github.com/MammatusPHP/http-server) (or another stack that consumes the same attributes and `Vhost` contract). This package does not start an HTTP server by itself.
 
-Controllers come in two different flavours static and instantiated controllers.
+# Routes
 
-## Static Controllers
+All handlers belong to vhost **`healthz`** ([`Vhost`](https://github.com/MammatusPHP/http-server-attributes/blob/main/src/Vhost.php) attribute). Each exposes a static [`handle()`](src/HealthzHandler.php) method marked **`@api`** so static analysis treats it as an entrypoint for routing.
 
-Static controllers are recommended when your controller doesn't have any dependencies like this ping controller used for
-[`updown.io`](https://updown.io/r/rPWzd) health checks. ***Note: `/ping` isn't a updown standard but it's my personal
-standard of doing health checks for my apps*** This controller only has a single method with a single route and no
-dependencies:
+| HTTP method | Path | Handler | Purpose |
+|-------------|------|---------|---------|
+| `GET` | [`/`](src/IndexHandler.php) | [`IndexHandler`](src/IndexHandler.php) | Redirects to [`/index.html`](public/index.html) |
+| `GET` | [`/healthz`](src/HealthzHandler.php) | [`HealthzHandler`](src/HealthzHandler.php) | JSON health payload |
+| `GET` | [`/probe/liveness`](src/LivenessProbeHandler.php) | [`LivenessProbeHandler`](src/LivenessProbeHandler.php) | Liveness probe ([`ProbeType::Liveness`](https://github.com/MammatusPHP/http-server-attributes/blob/main/src/ProbeType.php)) |
+| `GET` | [`/probe/readiness`](src/ReadinessProbeHandler.php) | [`ReadinessProbeHandler`](src/ReadinessProbeHandler.php) | Readiness probe |
+| `GET` | [`/probe/startup`](src/StartUpProbeHandler.php) | [`StartUpProbeHandler`](src/StartUpProbeHandler.php) | Startup probe |
+
+Successful health and probe handlers respond with `200`, `Content-Type: application/json`, and body `{"result":"healthy"}`.
+
+# Vhost configuration
+
+[`HealthCheckVhost`](src/HealthCheckVhost.php) implements [`Vhost`](https://github.com/MammatusPHP/http-server-contracts/blob/master/src/Configuration/Vhost.php):
+
+- **`name()`** returns `healthz`.
+- **`port()`** returns `9666`.
+- **`webroot()`** returns [`WebrootPath`](https://github.com/MammatusPHP/http-server-webroot/blob/master/src/WebrootPath.php) pointing at this package's [`public/`](public/) directory (static demo page and assets).
+- **`middleware()`** yields no extra middleware.
+
+Example attribute usage on a handler (same style as this package):
 
 ```php
-<?php declare(strict_types=1);
-
-namespace App\Controller;
-
+use Mammatus\Http\Server\Attributes\HttpMethod;
+use Mammatus\Http\Server\Attributes\Probe;
+use Mammatus\Http\Server\Attributes\ProbeType;
+use Mammatus\Http\Server\Attributes\Route;
+use Mammatus\Http\Server\Attributes\Vhost;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use ReactiveApps\Command\HttpServer\Annotations\Method;
-use ReactiveApps\Command\HttpServer\Annotations\Routes;
-use RingCentral\Psr7\Response;
+use React\Http\Message\Response;
 
-final class Ping
+/** @api */
+#[Vhost('healthz')]
+#[Route(HttpMethod::GET, '/probe/liveness')]
+#[Probe(ProbeType::Liveness)]
+final class LivenessProbeHandler
 {
-    /**
-     * @Method("GET")
-     * @Routes("/ping")
-     *
-     * @param  ServerRequestInterface $request
-     * @return ResponseInterface
-     */
-    public static function ping(ServerRequestInterface $request): ResponseInterface
+    public static function handle(): ResponseInterface
     {
         return new Response(
-            200,
-            ['Content-Type' => 'text/plain'],
-            'pong'
+            Response::STATUS_OK,
+            ['Content-Type' => 'application/json'],
+            '{"result":"healthy"}',
         );
     }
 }
 ```
 
-## Instantiated Controllers
-
-Instantiated Controllers on the other hand will be instantiated and kept around to handle more requests in the future
-as such they can have dependencies injected. The example below is a controller that has the event loop injected to wait
-for a random number of seconds before returning the response. It also uses coroutines to make the code more readable:
-
-```php
-<?php declare(strict_types=1);
-
-namespace App\Controller;
-
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use React\EventLoop\LoopInterface;
-use ReactiveApps\Command\HttpServer\Annotations\Method;
-use ReactiveApps\Command\HttpServer\Annotations\Routes;
-use ReactiveApps\Command\HttpServer\Annotations\Template;
-use ReactiveApps\Command\HttpServer\TemplateResponse;
-use WyriHaximus\Annotations\Coroutine;
-use function WyriHaximus\React\timedPromise;
-
-/**
- * @Coroutine())
- */
-final class Root
-{
-    /** @var LoopInterface */
-    private $loop;
-
-    /** @var int */
-    private $time;
-
-    public function __construct(LoopInterface $loop)
-    {
-        $this->loop = $loop;
-        $this->time = \time();
-    }
-
-    /**
-     * @Method("GET")
-     * @Routes("/")
-     * @Template("root")
-     *
-     * @param  ServerRequestInterface $request
-     * @return ResponseInterface
-     */
-    public function root(ServerRequestInterface $request)
-    {
-        $start = \time();
-
-        yield timedPromise($this->loop, \random_int(1, 5));
-
-        return (new TemplateResponse(
-            200,
-            ['Content-Type' => 'text/plain']
-        ))->withTemplateData([
-            'uptime' => (\time() - $this->time),
-            'took' => (\time() - $start),
-        ]);
-    }
-}
-
-```
-
-# Routing
-
-Routing is done through annotations on the method handling the routes. Each method can handle multiple routes but it's
-recommended to only map routes that fit the the method.
-
-For example the following annotation will map the current method to `/` (***note: all routes are required to be
-prefixed with `/`***): `@Routes("/")`
-
-A multi route annotation has a slightly different syntax, in the following both `/old` and `/new` will be handled by
-the same method:
-
-```php
-@Routes({
-    "/old",
-    "/new"
-})
-```
-
-The underlying engine for routes is [`nikic/fast-route`](https://github.com/nikic/FastRoute) which also makes complex
-routes like this one possible:
-
-```php
-@Route("/{map:(?:wow_cata_draenor|wow_cata_land|wow_cata_underwater|wow_legion_azeroth|wow_battle_for_azeroth|wow_cata_elemental_plane|wow_cata_twisting_nether|wow_comp_wotlk)}/{zoom:1|2|3|4|5|6|7|8|9|10}/{width:[0-9]{1,5}}/{height:[0-9]{1,5}}/{center:[a-zA-Z0-9\`\-\~\_\@\%]{1,35}}{blips:/blip\_center|/[a-zA-Z0-9\`\-\~\_\@\%\[\]]{3,}.+|}.{quality:png|hq.jpg|lq.jpg}")
-```
-
-The different route components like `map`, and `center` are available from the request object with:
-
-```php
-$request->getAttribute('center');
-```
-
-# Templates
-
-A route can render a template upon completion it needs an annotation and return/resolve with a `TemplateResponse`
-holding the data required for that template. For example:
-
-```php
-/**
- * @Template("root")
- */
-public function root(ServerRequestInterface $request)
-{
-    return (new TemplateResponse(
-        200,
-        ['Content-Type' => 'text/plain']
-    ))->withTemplateData([
-        'beer' => 'Allmouth', // https://untappd.com/user/WyriHaximus/checkin/745226210
-    ]);
-}
-```
-
-# Blocking operations in requests
-
-While we aim for building a completely non-blocking application we can't escape the truth that there might always be
-parts of our application that would block the loop. For those situations there are two ways provided to deal with those
-situations:
-
-* Child Process (slow, spawns full PHP processes to handle the request)
-* Threads (fast, uses threads to do the work, requires ZTS version of PHP)
-
-## Child Processes
-
-Works on most if not all systems but requires a full PHP processes per worker. Start up can be slow and communication
-with the child process goes over a socket. Add the `@ChildProcess` annotation to handle that specific action in a
-child process.
-
-## Threads
-
-Works only on ZTS PHP builds, but in return starts up almost instantly, communication is directly in memory thus never
-leaving the application server. Add the `@Thread` annotation to handle that specific action in a thread.
-
-# Annotations
-
-* `@ChildProcess` - Runs controller actions inside a child process
-* `@Coroutine` - Runs controller actions inside a coroutine
-* `@Method` - Allowed HTTP methods (GET, POST, PATCH, etc)
-* `@Routes` - Routes to use the given method for
-* `@Template` - Template to use when a TemplateResponse is used
-* `@Thread` - Runs controller actions inside a thread (preferred over use child processes)
-
-# Options
-
-* `http-server.address` - The IP + Port to listen on, for example: `0.0.0.0:8080`
-* `http-server.hsts` - Whether or not to set HSTS headers
-* `http-server.public` - Public webroot to serve, note only put files in here everyone is allowed to see
-* `http-server.public.preload.cache` - Custom cache to store the preloaded webroot files, stored in memory by default
-* `http-server.middleware.prefix` - An array with react/http middleware added before the accesslog and webroot serving middleware
-* `http-server.middleware.suffix` - An array with react/http middleware added after the accesslog and webroot serving middleware and before the route middleware and request handler
-* `http-server.pool.ttl` - TTL for a child process to wait for it's next task
-* `http-server.pool.min` - Minimum number of child processes
-* `http-server.pool.max` - maximum number of child processes
-* `http-server.rewrites` - Rewrites request path internally from one path to the other, invisible for visitors
+More attribute reference: [mammatus/http-server-attributes](https://github.com/MammatusPHP/http-server-attributes/blob/main/README.md).
 
 # License
 
