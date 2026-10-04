@@ -34,43 +34,6 @@ All handlers belong to vhost **`healthz`** ([`Vhost`](https://github.com/Mammatu
 
 Successful health and probe handlers respond with `200`, `Content-Type: application/json`, and body `{"result":"healthy"}`.
 
-# Vhost configuration
-
-[`HealthCheckVhost`](src/HealthCheckVhost.php) implements [`Vhost`](https://github.com/MammatusPHP/http-server-contracts/blob/master/src/Configuration/Vhost.php):
-
-- **`name()`** returns `healthz`.
-- **`port()`** returns `9666`.
-- **`webroot()`** returns [`WebrootPath`](https://github.com/MammatusPHP/http-server-webroot/blob/master/src/WebrootPath.php) pointing at this package's [`public/`](public/) directory (static demo page and assets).
-- **`middleware()`** yields no extra middleware.
-
-Example attribute usage on a handler (same style as this package):
-
-```php
-use Mammatus\Http\Server\Attributes\HttpMethod;
-use Mammatus\Http\Server\Attributes\Probe;
-use Mammatus\Http\Server\Attributes\ProbeType;
-use Mammatus\Http\Server\Attributes\Route;
-use Mammatus\Http\Server\Attributes\Vhost;
-use Psr\Http\Message\ResponseInterface;
-use React\Http\Message\Response;
-
-/** @api */
-#[Vhost('healthz')]
-#[Route(HttpMethod::GET, '/probe/liveness')]
-#[Probe(ProbeType::Liveness)]
-final class LivenessProbeHandler
-{
-    public static function handle(): ResponseInterface
-    {
-        return new Response(
-            Response::STATUS_OK,
-            ['Content-Type' => 'application/json'],
-            '{"result":"healthy"}',
-        );
-    }
-}
-```
-
 More attribute reference: [mammatus/http-server-attributes](https://github.com/MammatusPHP/http-server-attributes/blob/main/README.md).
 
 # License
